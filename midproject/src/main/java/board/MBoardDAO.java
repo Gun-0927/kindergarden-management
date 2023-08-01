@@ -1,0 +1,337 @@
+package board;
+
+
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+
+import javax.servlet.http.HttpServletRequest;
+
+import common.JDBConnPool;
+
+public class MBoardDAO extends JDBConnPool
+{
+	public MBoardDAO(){
+		super();
+}
+	
+	//board table 검색 조건 고려 결과 전체 개수
+	public int countAll(Map<String, Object> map)
+	{
+		int totalCount=0;
+		
+		String query= "select count(*) from board  where boardkind = 0";
+		if(map.get("searchStr")!=null)
+		{	
+			query +=" and "+ map.get("searchType") +" like '%"+ map.get("searchStr")+"%'";		
+		}
+		
+		try 
+		{
+			stmt = con.createStatement();
+			rs   = stmt.executeQuery(query);
+			// 처음꺼는 속성이기에 다음꺼로 넘기고 읽어가야 한다/
+			rs.next();
+			totalCount = rs.getInt(1);
+		} 
+		catch(Exception e) 
+		{
+			System.out.println("게시물 카운트 중 에러");
+			e.printStackTrace();
+		}
+		return totalCount;
+	}
+	public int countAll2(Map<String, Object> map)
+	{
+		int totalCount=0;
+		
+		String query= "select count(*) from board where writerid= 'master' and boardkind = 1"
+				+" or boardnum in(select boardnum from recipient where receiveid='박호진' OR receiveid IS NULL)";
+		if(map.get("searchStr")!=null)
+		{	
+			query +=" and "+ map.get("searchType") +" like '%"+ map.get("searchStr")+"%'";		
+		}
+		
+		try 
+		{
+			stmt = con.createStatement();
+			rs   = stmt.executeQuery(query);
+			// 처음꺼는 속성이기에 다음꺼로 넘기고 읽어가야 한다/
+			rs.next();
+			totalCount = rs.getInt(1);
+		} 
+		catch(Exception e) 
+		{
+			System.out.println("게시물 카운트 중 에러");
+			e.printStackTrace();
+		}
+		return totalCount;
+	}
+	
+	public List<MBoardDTO> getListPage(Map<String,Object> map)
+	{
+		List<MBoardDTO> bl = new Vector<>();
+		String query = "select * from("
+	            + " select rownum as pnum,s.* from( "
+	            + " select * from board where boardkind=0";
+	if(map.get("searchStr")!=null)
+	{   
+	    query += " and " + map.get("searchType") + " like '%"+map.get("searchStr")+"%'";      
+	}
+	query += " order by boardnum desc"
+	        +"  )s"
+	        +" )where pnum between ? and ? ";
+
+		try
+		{
+			psmt=con.prepareStatement(query);
+			psmt.setString(1, map.get("start").toString());
+			psmt.setString(2, map.get("end").toString());
+			rs = psmt.executeQuery();
+			while(rs.next())
+			{
+				MBoardDTO dto = new MBoardDTO();
+				
+				dto.setBoardnum(rs.getString("boardnum"));
+				dto.setTitle(rs.getString("title"));
+				dto.setContent(rs.getString("content"));
+				dto.setWriterid(rs.getString("writerid"));
+				dto.setWrite_date(rs.getDate("write_date"));
+				dto.setCount(rs.getInt("count"));
+				dto.setBoardkind(rs.getInt("boardkind"));
+				bl.add(dto);
+			}
+		}
+		catch(Exception e)
+		{
+			System.out.println("게시물 목록 읽기 중 에러");
+			e.printStackTrace();
+		}
+		return bl;
+	}
+	
+	
+	public List<MBoardDTO> getListPage2(Map<String,Object> map)
+	{
+		List<MBoardDTO> bl = new Vector<>();
+		String query = "select * from("
+	            +" select rownum as pnum,s.* from"
+	            +" (select * from board where writerid='박호진' and boardkind=1"
+	            +" or boardnum In (select boardnum from recipient where"
+	            +" receiveid='박호진' or receiveid is null)"
+	            +" order by boardnum desc)s";
+	if(map.get("searchStr")!=null)
+	{   
+	    query += " where s."+map.get("searchType")+" like '%"+map.get("searchStr")+"%'";      
+	}
+	query += " )a"
+	        +" where pnum between ? and ?";
+
+		try
+		{
+			psmt=con.prepareStatement(query);
+			psmt.setString(1, map.get("start").toString());
+			psmt.setString(2, map.get("end").toString());
+			rs = psmt.executeQuery();
+			while(rs.next())
+			{
+				MBoardDTO dto = new MBoardDTO();
+				
+				dto.setBoardnum(rs.getString("boardnum"));
+				dto.setTitle(rs.getString("title"));
+				dto.setContent(rs.getString("content"));
+				dto.setWriterid(rs.getString("writerid"));
+				dto.setWrite_date(rs.getDate("write_date"));
+				dto.setCount(rs.getInt("count"));
+				dto.setBoardkind(rs.getInt("boardkind"));
+				bl.add(dto);
+			}
+		}
+		catch(Exception e)
+		{
+			System.out.println("게시물 목록 읽기 중 에러");
+			e.printStackTrace();
+		}
+		return bl;
+	}
+	
+	public int insertWrite(MBoardDTO dto) {
+		int result = 0;
+		String query = "insert into board(boardnum,title,content,writerid,write_date,count,boardkind)"
+				+ " values(seq_board_boardnum.nextval,?,?,?,?,?,?)";
+		try {
+			psmt= con.prepareStatement(query);
+			psmt.setString(1, dto.getTitle());	
+			psmt.setString(2, dto.getContent());
+			psmt.setString(3, dto.getWriterid());
+			psmt.setDate(4, dto.getWrite_date());
+			psmt.setInt(5, dto.getCount());
+			 psmt.setInt(6, dto.getBoardkind());
+			result = psmt.executeUpdate();
+		} catch (Exception e) {
+			System.out.println("게시물 입력 중 예외");
+			e.printStackTrace();
+		}
+		return result;
+	}
+	public int insertReceiveWrite(MBoardDTO dto) {
+		int result = 0;
+		String query = "insert into recipient(boardnum,receiveid)"
+				+" values("
+				+" (select boardnum from board"
+				+" where title = ? and content = ?),?)";
+		try {
+			psmt=con.prepareStatement(query);
+			psmt.setString(1,dto.getTitle());
+			psmt.setString(2,dto.getContent());
+			psmt.setString(3,dto.getReceiveid());
+			result = psmt.executeUpdate();
+		}catch(Exception e) {
+			System.out.println("받는 사람 게시물 입력 중 예외");
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	
+	public void updateVisitCount(String boardnum)
+	{
+		String query="update board set count = count+1"
+				+"where boardkind=0 and boardnum=?";
+		try
+		{
+			psmt=con.prepareStatement(query);
+			psmt.setString(1, boardnum);
+			psmt.executeUpdate();
+		}
+		catch(Exception e)
+		{
+			System.out.println("다운로드 수 증가 중 예외");
+			e.printStackTrace();
+		}
+	}
+	public void updateVisitCount2(String boardnum)
+	{
+		String query="update board set count = count+1"
+				+"where boardkind=1 and boardnum=?";
+		try
+		{
+			psmt=con.prepareStatement(query);
+			psmt.setString(1, boardnum);
+			psmt.executeUpdate();
+		}
+		catch(Exception e)
+		{
+			System.out.println("다운로드 수 증가 중 예외");
+			e.printStackTrace();
+		}
+	}
+	
+	public MBoardDTO getView(String boardnum)
+	{
+		MBoardDTO dto =new MBoardDTO();
+		String query = "select * from board where boardkind=0 and boardnum=?";
+		try 
+		{
+			psmt = con.prepareStatement(query);
+			psmt.setString(1, boardnum);
+			rs = psmt.executeQuery();
+			if(rs.next())
+			{
+				dto.setBoardnum(rs.getString("boardnum"));
+				dto.setTitle(rs.getString("title"));
+				dto.setContent(rs.getString("content"));
+				dto.setWriterid(rs.getString("writerid"));
+				dto.setWrite_date(rs.getDate("write_date"));
+				dto.setCount(rs.getInt("count"));
+				dto.setBoardkind(rs.getInt("boardkind"));
+			}
+		} 
+		catch (Exception e) 
+		{
+			System.out.println("상세보기 중 예외");
+			e.printStackTrace();
+		}
+		
+		return dto;
+	}
+	public MBoardDTO getView2(String boardnum)
+	{
+		MBoardDTO dto =new MBoardDTO();
+		String query = "select * from("
+				+" select * from board where writerid='박호진' and boardkind=1"
+				+" or boardnum in(select boardnum from recipient where receiveid='박호진' OR receiveid IS NULL)"
+				+" )s where s.boardnum =?";
+		try 
+		{
+			psmt = con.prepareStatement(query);
+			psmt.setString(1, boardnum);
+			rs = psmt.executeQuery();
+			if(rs.next())
+			{
+				dto.setBoardnum(rs.getString("boardnum"));
+				dto.setTitle(rs.getString("title"));
+				dto.setContent(rs.getString("content"));
+				dto.setWriterid(rs.getString("writerid"));
+				dto.setWrite_date(rs.getDate("write_date"));
+				dto.setCount(rs.getInt("count"));
+				dto.setBoardkind(rs.getInt("boardkind"));
+			}
+		} 
+		catch (Exception e) 
+		{
+			System.out.println("상세보기 중 예외");
+			e.printStackTrace();
+		}
+		
+		return dto;
+	}
+	  public int updatePost(MBoardDTO dto) {
+		  int result=0;
+		  try {
+			  String query="update BOARD "
+			  			+" set title=?,content=?"
+			  			+" where boardnum=?";
+			  psmt=con.prepareStatement(query);
+			  psmt.setString(1, dto.getTitle());
+			  psmt.setString(2, dto.getContent());
+			  psmt.setString(3, dto.getBoardnum());
+			  result=psmt.executeUpdate();
+		  }catch(Exception e) {
+			  System.out.println("게시뭃 수정 중 에러");
+			  e.printStackTrace();
+		  }
+		  return result;
+	  }
+	 
+
+	  public int deletePost(String boardnum) {
+		  int result=0;
+		  try {
+			  String query="delete from BOARD where boardnum=?";
+			  psmt=con.prepareStatement(query);
+			  psmt.setString(1, boardnum);
+			  result=psmt.executeUpdate();
+		  }catch(Exception e) {
+			  System.out.println("게시물 삭제 중 에러");
+			  e.printStackTrace();
+		  }
+		  return result;
+	  }
+
+
+	
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+

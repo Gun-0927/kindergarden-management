@@ -1,0 +1,156 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 부트스트랩 CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+	crossorigin="anonymous">
+<title>반 설정</title>
+<style>
+a {
+	text-decoration: none
+}
+</style>
+
+</head>
+<body>
+	<jsp:include page="/Board/Layout.jsp"></jsp:include>
+	<div style="border: 3px solid #b7d9df; border-radius: 20px; width: 1300px; height: auto; position: absolute; left: 310px;">
+	<h2 style="text-align: center; color: green;">반 신청</h2>
+	<br>
+	<br>
+	<!-- 목록 -->
+	<table class="table table-bordered";>
+		<thead>
+			<tr>
+				<th scope="col">반</th>
+				<th scope="col">학생 이름</th>
+				<th scope="col">설정</th>
+				<th scope="col"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:choose>
+				<c:when test="${empty childList}">
+					<td colspan="6" align="center">등록된 반이 없습니다.</td>
+				</c:when>
+				<c:otherwise>
+					<c:forEach items="${childList}" var="list" varStatus="stat">
+						<tr align="center">
+							<c:choose>
+								<c:when test="${list.classcheck == 0 && sessionScope.kind == 0}">
+									<td>${list.classnum}</td>
+									<td>${list.childname}</td>
+									<td>
+										<button type="button"
+											onclick="location.href='<%= request.getContextPath() %>/classCheck/editClass.do?chnum=${list.chnum}';">수정하기</button>
+										<button type="button"
+											onclick="location.href='<%= request.getContextPath() %>/classCheck/deleteClass.do?chnum=${list.chnum}';">삭제하기</button>
+										<button type="button"
+											onclick="location.href='<%= request.getContextPath() %>/classCheck/updateClass.do?chnum=${list.chnum}';">확정되기</button>
+									</td>
+								</c:when>
+								<c:when test="${list.classcheck == 0 && sessionScope.kind == 1}">
+									<td>${list.classnum}</td>
+									<td>${list.childname}</td>
+								</c:when>
+								<c:when test="${list.classcheck == 0 && sessionScope.kind == 2}">
+									<td>${list.classnum}</td>
+									<td>${list.childname}</td>
+									<td>
+										<button type="button"
+											onclick="location.href='<%= request.getContextPath() %>/classCheck/editClass.do?chnum=${list.chnum}';">수정하기</button>
+										<button type="button"
+											onclick="location.href='<%= request.getContextPath() %>/classCheck/deleteClass.do?chnum=${list.chnum}';">삭제하기</button>
+									</td>
+								</c:when>
+							</c:choose>
+						</tr>
+					</c:forEach>
+				</c:otherwise>
+			</c:choose>
+		</tbody>
+		<!--  하단 메뉴(페이징 글쓰기) -->
+		<table width="100%">
+			<tr align="center">
+				<td><c:choose>
+						<c:when test="${sessionScope.kind != 1}">
+							<button type="button"
+								onclick="location.href='<%=request.getContextPath()%>/Board/WriteClass.jsp';">반
+								신청</button>
+						</c:when>
+					</c:choose></td>
+			</tr>
+		</table>
+		<br>
+		<br>
+		<h2 style="text-align: center; color: green;">신청된 반</h2>
+		<br>
+		<br>
+		<table class="table table-bordered";>
+			<thead>
+				<tr>
+					<th scope="col">반</th>
+					<th scope="col">학생 이름</th>
+					<th scope="col">설정</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:choose>
+					<c:when test="${empty childList}">
+						<td colspan="6" align="center">등록된 반이 없습니다.</td>
+					</c:when>
+					<c:otherwise>
+						<c:forEach items="${childList}" var="list" varStatus="stat">
+							<tr align="center">
+								<c:choose>
+									<c:when
+										test="${list.classcheck == 1 && sessionScope.kind == 0}">
+										<td>${list.classnum}</td>
+										<td>${list.childname}</td>
+										<td>
+											<button type="button"
+												onclick="location.href='<%= request.getContextPath() %>/classCheck/editClass.do?chnum=${list.chnum}';">수정하기</button>
+											<button type="button"
+												onclick="location.href='<%= request.getContextPath() %>/classCheck/deleteClass.do?chnum=${list.chnum}';">삭제하기</button>
+											<button type="button"
+												onclick="location.href='<%= request.getContextPath() %>/classCheck/updateClass.do?chnum=${list.chnum}';">확정되기</button>
+										</td>
+									</c:when>
+									<c:when
+										test="${list.classcheck == 1 && sessionScope.kind == 1}">
+										<td>${list.classnum}</td>
+										<td>${list.childname}</td>
+									</c:when>
+									<c:when
+										test="${list.classcheck == 1 && sessionScope.kind == 2}">
+										<td>${list.classnum}</td>
+										<td>${list.childname}</td>
+										<td>
+											<button type="button"
+												onclick="location.href='<%= request.getContextPath() %>/classCheck/editClass.do?chnum=${list.chnum}';">수정하기</button>
+											<button type="button"
+												onclick="location.href='<%= request.getContextPath() %>/classCheck/deleteClass.do?chnum=${list.chnum}';">삭제하기</button>
+										</td>
+									</c:when>
+								</c:choose>
+							</tr>
+						</c:forEach>
+
+					</c:otherwise>
+				</c:choose>
+			</tbody>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

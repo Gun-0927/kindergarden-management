@@ -1,0 +1,33 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // AJAX 요청을 보내고 결과를 받아서 div 안에 채워주는 함수
+    function refreshList() {
+        $.ajax({
+            url : "../albumBoard/list.do",
+            success : function(result) {
+                $("#myDiv").html(result);
+            }
+        });
+    }
+    
+    $(document).ready(function() {
+        // 페이지 로드시 초기 한 번은 실행
+        refreshList();
+        
+        // 버튼 클릭시 refreshList 함수를 호출하여 div 안에 결과를 새로 채워줌
+        $("#refreshButton").click(function() {
+            refreshList();
+        });
+    });
+</script>
+</head>
+<body>
+	<jsp:include page="Layout.jsp"></jsp:include>
+	<div id="myDiv" style="border: 3px solid #b7d9df; border-radius: 20px; width: 1300px; height: auto; position: absolute; left: 310px;"></div>
+</body>
+</html>

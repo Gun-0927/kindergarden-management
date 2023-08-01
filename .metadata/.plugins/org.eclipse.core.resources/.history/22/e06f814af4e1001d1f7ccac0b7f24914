@@ -1,0 +1,38 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function() {
+		$.ajax({
+			url : "../albumBoard/list.do",
+			success : function(result) {
+				$("#myDiv").html(result);
+			}
+		});
+		$("#myDiv").on("click", ".btn-write", function(event) {
+			console.log("btn-write clicked");
+			event.preventDefault(); // 기본 동작 막기
+			$.ajax({
+				url : "../albumBoard/write.do",
+				success : function(result) {
+					$("#myDiv").html(result);
+				}
+			});
+		});
+		 // 페이지 링크를 클릭하면 AJAX 요청을 보냄
+	    $("#myDiv").on("click", "td", function(event) {
+	        event.preventDefault(); // 기본 동작 막음
+	        var pageNum = $(this).attr("href"); // 클릭한 링크의 href 속성값
+	        loadAlbumBoard(pageNum);
+	    });
+	});
+</script>
+</head>
+<body>
+	<jsp:include page="Layout.jsp"></jsp:include>
+	<div id="myDiv"	style="border: 3px solid #b7d9df; border-radius: 20px; width: 1300px; height: auto; position: absolute; left: 310px;"></div>
+</body>
+</html>

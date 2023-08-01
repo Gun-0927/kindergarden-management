@@ -1,0 +1,13 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<jsp:include page="Layout.jsp"></jsp:include>
+<div style="border: 3px solid black; width: 1400px; height: 700px; position: absolute; left: 310px;">
+	<jsp:include page="../Board/Enterance.jsp"></jsp:include>
+</div>
+</body>
+</html>

@@ -1,0 +1,7 @@
+INDEX VERSION 1.4+D:\bluemidpj\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+2894285909.index
+2756628703.index
+3233078098.index
+2916595355.index
+730130401.index
+3191731546.index

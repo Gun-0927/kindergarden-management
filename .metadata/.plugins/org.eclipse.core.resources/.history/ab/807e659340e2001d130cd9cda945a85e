@@ -1,0 +1,103 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>안쪽 게시판</title>
+<style>
+.button {
+	font-size: 14px;
+	border: none;
+	background-color: #1BBC9B;
+	color: white;
+}
+</style>
+</head>
+<body>
+	<jsp:include page="/blueAlbum/Layout.jsp"></jsp:include>
+	<div style="border: 3px solid #b7d9df; border-radius: 20px; width: 1300px; height: auto; position: absolute; left: 310px;">
+	</div>
+	<h2>게시판 상세보기</h2>
+	<table border="3"
+		style="border-color: #1BBC9B; border-style: solid; border-collapse: collapse; text-align: center; width: 90%;">
+		<colgroup>
+			<col width="15%" />
+			<col width="35%" />
+			<col width="15%" />
+			<col width="*" />
+		</colgroup>
+		<tr>
+			<td>번호</td>
+			<td>${dto.alnum}</td>
+			<td>작성자</td>
+			<td>${dto.teacherId}</td>
+		</tr>
+		<tr>
+			<td>작성일</td>
+			<td>${dto.writeDate}</td>
+			<td>조회수</td>
+			<td>${dto.count}</td>
+		</tr>
+		<tr>
+			<td>제목</td>
+			<td colspan="3" align="center" style="text-align: left;">${dto.title}</td>
+		</tr>
+		<tr>
+			<td>첨부파일</td>
+			<td><c:if test="${not empty dto.imgName}">
+				${dto.imgName}
+				<a
+						href="../albumBoard/download.do?imgName=${dto.imgName}&nfile=${dto.nfile}&alnum=${dto.alnum}">[다운로드]</a>
+					<button type="button" id="downbtn" class="button">다운로드</button>
+				</c:if></td>
+			<td>다운로드수</td>
+			<td id="dcount">${dto.downCnt}</td>
+		</tr>
+		<tr>
+			<td>사진</td>
+			<td><img
+				src="<%=request.getContextPath()%>/Storage/${dto.nfile}"
+				width="300px" height="300px" /></td>
+		</tr>
+		<tr>
+			<td colspan="4" align="center"><c:choose>
+					<c:when test="${sessionScope.kind != 2}">
+						<button type="button"
+							onclick="location.href='../albumBoard/pass.do?mode=edit&alnum=${param.alnum}';"
+							class="button">수정하기</button>
+						<button type="button"
+							onclick="location.href='../albumBoard/pass.do?mode=delete&alnum=${param.alnum}';"
+							class="button">삭제하기</button>
+					</c:when>
+				</c:choose>
+				<button type="button"
+					onclick="location.href='../albumBoard/list.do';" class="button">목록
+					바로가기</button></td>
+	</table>
+	<script src="https://code.jquery.com/jquery-3.6.4.js"
+		integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
+		crossorigin="anonymous"></script>
+	<script>
+	$('#downbtn').on('click',(e)=>{
+		e.preventDefault();
+		console.log('btn click');
+		$.ajax({
+			type:'post',
+			async:false,
+			url:'/blueProject/albumBoard/download.do',
+			dataType:'text',
+			data:{alnum:'${dto.alnum}'},
+			success:function(data,textStatus){
+				console.log(data);
+				$('#dcount').text(data);
+			},
+			error:function(data,textStatus){
+				console.log('error',data,textStatus);
+			}
+		})
+	});	
+</script>
+</body>
+</html>

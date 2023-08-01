@@ -1,0 +1,29 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="../Project/Layout.jsp"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<title>메인 페이지</title> 
+<%
+	String name = request.getParameter("name");
+	String id = request.getParameter("id");
+%>
+</head>
+<body>
+<!-- 	<div style="border: 3px solid #b7d9df; border-radius: 20px; width: 1300px; height: auto; position: absolute; left: 310px;"> -->
+<!-- 	<h2>게시판</h2> -->
+	
+<%-- 	<%= session.getAttribute("name") %> 회원님, 로그인하셨습니다. --%>
+<%-- 	<a href="<%= request.getContextPath() %>/login/Logout.do">[로그아웃]</a> --%>
+<!-- 	<br> -->
+<%-- 	<a href="<%= request.getContextPath() %>/board/list.do">공지사항 바로가기</a><br> --%>
+<%-- 	<a href="<%= request.getContextPath() %>/board/list2.do">알림장  바로가기</a><br> --%>
+<%-- 	<a href="<%= request.getContextPath() %>/classCheck/list3.do">반  바로가기</a><br> --%>
+<%-- 	<a href="<%= request.getContextPath() %>/albumBoard/list.do">앨범</a><br> --%>
+<%-- 	<a href="Write.jsp?id=<%= session.getAttribute("id") %>">글 쓰기</a> --%>
+<!-- 	</div> -->
+	
+</body>
+</html>

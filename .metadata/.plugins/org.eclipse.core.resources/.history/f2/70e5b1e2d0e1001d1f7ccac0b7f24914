@@ -1,0 +1,42 @@
+package board;
+
+import java.io.IOException;
+import java.sql.Date;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/board/write.do")
+public class WriteController extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // 선택한 값을 DTO에 저장
+    	int boardkind = Integer.parseInt(req.getParameter("boardkind"));
+        MBoardDTO dto = new MBoardDTO();
+        dto.setWriterid("박호진");
+        dto.setTitle(req.getParameter("title"));
+        dto.setContent(req.getParameter("content"));
+        dto.setBoardkind(boardkind);
+        dto.setWrite_date(new Date(System.currentTimeMillis()));
+
+        // DAO를 통해 DB에 내용 저장
+        MBoardDAO dao = new MBoardDAO();
+        int result = dao.insertWrite(dto);
+        dao.close();
+
+        // 성공여부
+        if (result == 1) {
+        	if(boardkind==0) {
+        		resp.sendRedirect("../board/list.do");
+           	}
+        	else if(boardkind==1) 
+        	{	
+        		resp.sendRedirect("../board/list2.do");
+        	}
+        } else {
+            resp.sendRedirect("../board/write.do");
+        }
+    }
+}

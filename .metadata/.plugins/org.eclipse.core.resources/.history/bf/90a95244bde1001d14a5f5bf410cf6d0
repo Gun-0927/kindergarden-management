@@ -1,0 +1,86 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.container {
+	display: flex;
+	width: 1500px;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	margin-left: 240px;
+	margin-bottom: 20px;
+	flex-wrap: wrap;
+	overflow: auto; /* 스크롤을 만들기 위한 속성 */
+}
+
+.box {
+	width: 600px;
+	height: 200px;
+	border: solid 5px #b7d9df;
+	border-radius: 20px;
+	padding-top: 50px;
+	font-size: 20px;
+	text-align: center;
+	margin: 0 auto;
+	flex-grow: 0; /* 추가 */
+	overflow: auto; /* 추가 */
+}
+
+.box1 {
+	width: 600px;
+	height: 500px;
+	border: solid 5px #b7d9df;
+	border-radius: 20px;
+	padding-top: 50px;
+	font-size: 20px;
+	text-align: center;
+	margin: 0 auto;
+	flex-grow: 0; /* 추가 */
+	overflow: auto; /* 추가 */
+}
+
+.box h2 {
+	vertical-align: top;
+	margin-top: -40px
+}
+
+.box .more {
+	float: right;
+	font-size: 19px;
+	margin-top: 14px;
+	margin-right: 5px;
+	text-decoration-line: none;
+	color: black;
+}
+
+.box1 .more {
+	float: right;
+	font-size: 19px;
+	margin-top: 14px;
+	margin-right: 5px;
+	text-decoration-line: none;
+	color: black;
+}
+
+.box1 h2 {
+	vertical-align: top;
+	margin-top: -40px
+}
+
+.box p {
+	padding: 10px;
+	background-color: pink;
+}
+</style>
+</head>
+<body>
+<jsp:include page="Layout.jsp"></jsp:include>
+<%-- 	<jsp:include page="../Board/Enterance.jsp"></jsp:include> --%>
+<div style="border: 5px solid black; width: 1500px; height: 700px; position: absolute; left: 300px;">
+</div>
+
+</body>
+</html>

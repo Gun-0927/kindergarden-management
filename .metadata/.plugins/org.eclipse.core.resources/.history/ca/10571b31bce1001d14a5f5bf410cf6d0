@@ -1,0 +1,111 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.container {
+	display: flex;
+	width: 1500px;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	margin-left: 240px;
+	margin-bottom: 20px;
+	flex-wrap: wrap;
+	overflow: auto; /* 스크롤을 만들기 위한 속성 */
+}
+
+.box {
+	width: 600px;
+	height: 200px;
+	border: solid 5px #b7d9df;
+	border-radius: 20px;
+	padding-top: 50px;
+	font-size: 20px;
+	text-align: center;
+	margin: 0 auto;
+	flex-grow: 0; /* 추가 */
+	overflow: auto; /* 추가 */
+}
+
+.box1 {
+	width: 600px;
+	height: 500px;
+	border: solid 5px #b7d9df;
+	border-radius: 20px;
+	padding-top: 50px;
+	font-size: 20px;
+	text-align: center;
+	margin: 0 auto;
+	flex-grow: 0; /* 추가 */
+	overflow: auto; /* 추가 */
+}
+
+.box h2 {
+	vertical-align: top;
+	margin-top: -40px
+}
+
+.box .more {
+	float: right;
+	font-size: 19px;
+	margin-top: 14px;
+	margin-right: 5px;
+	text-decoration-line: none;
+	color: black;
+}
+
+.box1 .more {
+	float: right;
+	font-size: 19px;
+	margin-top: 14px;
+	margin-right: 5px;
+	text-decoration-line: none;
+	color: black;
+}
+
+.box1 h2 {
+	vertical-align: top;
+	margin-top: -40px
+}
+
+.box p {
+	padding: 10px;
+	background-color: pink;
+}
+</style>
+</head>
+<body>
+<jsp:include page="Layout.jsp"></jsp:include>
+<jsp:include page="../Board/Enterance.jsp"></jsp:include>
+<!-- </div> -->
+<!--    <div class="container"> -->
+<!--       <div class="box"> -->
+<!--          <h2>공지사항 <a href="Notice.jsp" class="more">more</a></h2> -->
+<!--                  <p>공지사항 내용</p> -->
+<!--       </div> -->
+<!--       <div class="box" style="margin-right: 220px"> -->
+<!--          <h2>알림장 <a href="Board.jsp" class="more">more</a></h2> -->
+<!--          <p>알림장 내용</p> -->
+<!--       </div> -->
+<!--    </div> -->
+<!--    <div class="container"> -->
+<!--       <div class="box1"> -->
+<!--         <h2>일정표 <a href="Calendar.jsp" class="more">more</a></h2> -->
+<!--          <p> -->
+<!--          <iframe  -->
+<!--     		width="99%" -->
+<!--     		height="400px" -->
+<!--     		src="http://localhost:8081/midproject/fullcalendar/index_google.html" -->
+<!--     		style="overflow:hidden; border: none;"> -->
+<!-- 		</iframe> -->
+<!--          </p> -->
+<!--       </div> -->
+<!--       <div class="box1" style="margin-right: 220px"> -->
+<!--          <h2>앨범 <a href="Album.jsp" class="more">more</a></h2> -->
+<!--          <p>앨범 내용</p> -->
+<!--       </div> -->
+<!--    </div> -->
+</body>
+</html>

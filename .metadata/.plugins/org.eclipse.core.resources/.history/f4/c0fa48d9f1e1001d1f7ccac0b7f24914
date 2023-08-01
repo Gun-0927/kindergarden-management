@@ -1,0 +1,40 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    // 페이지 로드시 AJAX 호출
+    $.ajax({
+        url: "../albumBoard/list.do",
+        success: function(result) {
+            $("#myTable").html(result);
+        }
+    });
+
+    // 페이징 처리 버튼 클릭시 AJAX 호출
+    $("#myTable").on("click", "td.paging", function(event) {
+        var target = $(event.target); // 클릭된 요소
+        if (target.is("a")) { // 클릭된 요소가 <a> 태그인 경우
+            event.preventDefault(); // 기본 동작을 막음
+
+            var pageNum = target.attr("href").match(/pageNum=(\d+)/)[1]; // 페이지 번호 추출
+            $.ajax({
+                url: "../albumBoard/list.do?pageNum=" + pageNum,
+                success: function(result) {
+                    $("#myTable").html(result);
+                }
+            });
+        }
+    });
+});
+
+</script>
+</head>
+<body>
+	<jsp:include page="Layout.jsp"></jsp:include>
+	<div id="myTable" style="border: 3px solid #b7d9df; border-radius: 20px; width: 1300px; height: auto; position: absolute; left: 310px;"></div>
+</body>
+</html>
